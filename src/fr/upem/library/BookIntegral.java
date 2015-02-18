@@ -27,7 +27,7 @@ public class BookIntegral extends LinkedList<Book> implements MediaBuyable {
 	}
 
 	@Override
-	public double getTaxIncludedPrice(double taxRate) {
+	public double taxIncludedPrice(double taxRate) {
 		return this.price() * (1+(taxRate/100));
 	}
 }

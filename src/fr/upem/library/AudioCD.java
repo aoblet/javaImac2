@@ -2,7 +2,9 @@ package fr.upem.library;
 
 public class AudioCD implements MediaBuyable {
 	protected String m_title;
+	protected String m_author;
 	protected double m_price;
+	protected int    m_nbSongs;
 
 	public AudioCD(String title, double price){
 		m_title = title;
@@ -20,7 +22,7 @@ public class AudioCD implements MediaBuyable {
 	}
 
 	@Override
-	public double getTaxIncludedPrice(double taxRate) {
+	public double taxIncludedPrice(double taxRate) {
 		return m_price * (1+(taxRate/100));
 	}
 }

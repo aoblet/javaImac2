@@ -75,7 +75,7 @@ public class Book implements MediaBuyable{
 	}
 
 	@Override
-	public double getTaxIncludedPrice(double taxRate) {
+	public double taxIncludedPrice(double taxRate) {
 		return m_price * (1+ (taxRate/100));
 	}
 	

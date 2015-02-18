@@ -26,9 +26,11 @@ public class LinkedList {
 		
 		Link tmp = m_firstLink;
 		for(int i=0; i<m_size; ++i){
-			if(tmp != null && tmp.data() != null)
-				res.append(tmp.data().toString()).append("\n");
-			tmp = tmp.next();
+			if(tmp != null){
+				if(tmp.data() != null)
+					res.append(tmp.data().toString()).append("\n");
+				tmp = tmp.next();
+			}
 		}
 		return res.toString();
 	}
@@ -40,7 +42,7 @@ public class LinkedList {
 		Link tmp = m_firstLink;
 		for(int j=1; j<=i;++j)
 			tmp = tmp.next();
-		return tmp != null ? tmp.data() : null; //
+		return tmp != null ? tmp.data() : null;
 	}
 	
 	public static void main(String [] args){
