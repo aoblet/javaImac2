@@ -1,6 +1,7 @@
 package fr.upem.library;
 
 import javax.naming.SizeLimitExceededException;
+
 import java.util.LinkedList;
 
 
@@ -39,12 +40,19 @@ public class Library {
 		return false;
 	}
 	
-	public void pop(int index) throws IndexOutOfBoundsException{
-		if(index <-1 || index > m_currentIndex)
+	public void pop(){
+		if(m_currentIndex == 0)
+			return;
+		--m_currentIndex;
+	}
+	
+	public void removeAt(int index) throws IndexOutOfBoundsException{
+		if(index < 0 || index > m_currentIndex)
 			throw new IndexOutOfBoundsException();
 		
-		index = index==-1? m_currentIndex : index;
-		//TODO:move list splitted
+		for(int i=index; i<m_currentIndex && i<m_maxCapacity; ++i)
+			m_books[i] = m_books[i+1];
+		--m_currentIndex;
 	}
 	
 	@Override //erase default toString method
@@ -68,7 +76,7 @@ public class Library {
 		LinkedList<Comic> res =  new LinkedList<Comic>();
 		
 		for(int i=0; i<m_currentIndex; ++i){
-			if(m_books[i].getClass().getName() == "Comic")
+			if(m_books[i].getClass().getName() == "Comic") // or instanceof
 				res.add((Comic)m_books[i]);
 		}
 		return res;
