@@ -111,18 +111,19 @@ public class LinkedList implements Iterable<Link>{
 		if(i < 0 || i>m_size)
 			throw new IndexOutOfBoundsException();
 	}
-	
-	public void addSorted(MediaBuyable b){
-		Link tmp = m_firstLink;
-		
-		for(Link l: this){
-			if(l.data().title().compareTo(b.title()) == -1){
-				break;
-			}
-			tmp = l;
-		}
-		
-	}
+
+//TODO
+//	public void addSorted(MediaBuyable b){
+//		Link tmp = m_firstLink;
+//		
+//		for(Link l: this){
+//			if(l.data().title().compareTo(b.title()) == -1){
+//				break;
+//			}
+//			tmp = l;
+//		}
+//		
+//	}
 
 	public static void main(String [] args){
 		Book b1 = new Book("Mon test1", "Alexis Oblet", 25);

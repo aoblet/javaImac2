@@ -1,19 +1,17 @@
 package fr.upem.library;
 
-public class Book implements MediaBuyable{
-	final protected String m_title;
+import fr.upem.data.AbstractMediaBuyable;
+
+public class Book extends AbstractMediaBuyable{
 	final protected String m_author;
 	final protected String m_isbn;
-	protected double m_price;
 	
 	protected static int isbnCounter;
 	
 	public Book(String title, String author, String isbn, double price){
-		this.m_title = title;
+		super(title, price, 5.5);
 		this.m_author = author;
 		this.m_isbn = isbn;
-		this.m_price = price;
-		
 		//construct: new Book(.., .., ..,..);
 	}
 	
@@ -42,10 +40,6 @@ public class Book implements MediaBuyable{
 		return m_isbn;
 	}
 
-	public void setPrice(double m_price) {
-		this.m_price = m_price;
-	}
-
 	public boolean equals(Object o){
 		if(o instanceof Book){
 			Book tmp = (Book) o;
@@ -64,21 +58,7 @@ public class Book implements MediaBuyable{
 		return res.toString();
 	}
 	
-	@Override
-	public String title() {
-		return m_title;
-	}
 
-	@Override
-	public double price() {
-		return m_price;
-	}
-
-	@Override
-	public double taxIncludedPrice(double taxRate) {
-		return m_price * (1+ (taxRate/100));
-	}
-	
 	@Override
 	protected void finalize() throws Throwable {
 		super.finalize();
