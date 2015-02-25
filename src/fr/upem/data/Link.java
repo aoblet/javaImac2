@@ -1,20 +1,19 @@
 package fr.upem.data;
-import fr.upem.library.MediaBuyable;
 
-public class Link {
-	final MediaBuyable m_data;
-	Link m_next;
+public class Link<T> {
+	final T m_data;
+	Link<T> m_next;
 	
-	public Link(MediaBuyable data, Link next){
+	public Link(T data, Link<T> next){
 		m_next = next;
 		m_data = data;
 	}
 	
-	public Link next(){
+	public Link<T> next(){
 		return m_next;
 	}
 	
-	public MediaBuyable data(){
+	public T data(){
 		return m_data;
 	}
 }

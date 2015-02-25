@@ -3,17 +3,17 @@ import java.util.Iterator;
 
 import fr.upem.library.*;
 
-public class LinkedList implements Iterable<Link>{
+public class LinkedList<T> implements Iterable<Link<T>>{
 	int m_size;
-	Link m_firstLink;
+	Link<T> m_firstLink;
 	
 	public LinkedList(){
 		m_size = 0;
 		m_firstLink = null;
 	}
 	
-	public void add(MediaBuyable m){
-		Link tmp = new Link(m, m_firstLink);
+	public void add(T m){
+		Link<T> tmp = new Link<T>(m, m_firstLink);
 		m_firstLink = tmp;
 		++m_size;
 	}
@@ -22,7 +22,7 @@ public class LinkedList implements Iterable<Link>{
 		return m_size;
 	}
 	
-	public Link first(){
+	public Link<T> first(){
 		return m_firstLink;
 	}
 	
@@ -30,7 +30,7 @@ public class LinkedList implements Iterable<Link>{
 	public String toString(){
 		StringBuilder res = new StringBuilder();
 		
-		Link tmp = m_firstLink;
+		Link<T> tmp = m_firstLink;
 		for(int i=0; i<m_size; ++i){
 			if(tmp != null){
 				if(tmp.data() != null)
@@ -41,21 +41,21 @@ public class LinkedList implements Iterable<Link>{
 		return res.toString();
 	}
 	
-	public MediaBuyable get(int i) throws IndexOutOfBoundsException{
+	public T get(int i) throws IndexOutOfBoundsException{
 		if(i <0 || i>m_size)
 			throw new IndexOutOfBoundsException();
 		
-		Link tmp = m_firstLink;
+		Link<T> tmp = m_firstLink;
 		for(int j=1; j<=i;++j)
 			tmp = tmp.next();
 		return tmp != null ? tmp.data() : null;
 	}
 	
 	@Override
-	public Iterator<Link> iterator() {
-		Iterator<Link> it = new Iterator<Link>() {
+	public Iterator<Link<T>> iterator() {
+		Iterator<Link<T>> it = new Iterator<Link<T>>() {
 			
-			private Link m_tmp = new Link(null, LinkedList.this.m_firstLink);
+			private Link<T> m_tmp = new Link<T>(null, LinkedList.this.m_firstLink);
 			
 			@Override
 			public boolean hasNext() {
@@ -63,7 +63,7 @@ public class LinkedList implements Iterable<Link>{
 			}
 
 			@Override
-			public Link next() {
+			public Link<T> next() {
 				if(m_tmp != null && m_tmp.next() != null)
 					return (m_tmp = m_tmp.next());
 				return null;
@@ -77,9 +77,9 @@ public class LinkedList implements Iterable<Link>{
 		return it;
 	}
 	
-	public Link pop(){
+	public Link<T> pop(){
 		if(m_firstLink != null){
-			Link tmp = m_firstLink;
+			Link<T> tmp = m_firstLink;
 			m_firstLink = m_firstLink.next();
 			m_size--;
 			return tmp;
@@ -92,7 +92,7 @@ public class LinkedList implements Iterable<Link>{
 		if(i < 0 || i>m_size)
 			throw new IndexOutOfBoundsException();
 		
-		Link tmp = null;
+		Link<T> tmp = null;
 		for(int j=0; j<i; ++j)
 			tmp = tmp.next();
 		
@@ -128,7 +128,7 @@ public class LinkedList implements Iterable<Link>{
 	public static void main(String [] args){
 		Book b1 = new Book("Mon test1", "Alexis Oblet", 25);
 		Book b2 = new Book("Mon test2", "Alexis Oblet", 35);
-		LinkedList list = new LinkedList();
+		LinkedList<MediaBuyable> list = new LinkedList<MediaBuyable>();
 		list.add(b1);
 		list.add(b2);
 		list.add(b1);
@@ -142,7 +142,7 @@ public class LinkedList implements Iterable<Link>{
 		list.add(b1);
 		list.add(b1);
 		
-		for(Link b: list)
+		for(Link<MediaBuyable> b: list)
 			System.out.println(b.data().price());
 	}
 }

@@ -1,4 +1,4 @@
-package fr.upem.library;
+package fr.upem.data;
 
 public interface MediaBuyable {
 	public String title();

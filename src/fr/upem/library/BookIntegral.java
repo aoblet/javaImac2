@@ -9,10 +9,6 @@ public class BookIntegral extends AbstractMediaBuyable{
 	protected String m_author;
 	protected LinkedList<Book> m_list;
 	
-	static class Subpart{
-		
-	}
-	
 	public BookIntegral(String author, String nameSerie){
 		super(nameSerie, 0);
 		m_author = author;

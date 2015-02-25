@@ -2,8 +2,9 @@ package fr.upem.library;
 
 import javax.naming.SizeLimitExceededException;
 
-import java.util.LinkedList;
-
+import fr.upem.data.Link;
+import fr.upem.data.MediaBuyable;
+import fr.upem.data.LinkedList;
 
 public class Library {
 	int m_maxCapacity;
@@ -93,8 +94,8 @@ public class Library {
 	
 	public void printResultatSearch(String pattern){
 		System.out.println("Search: "+pattern);
-		for(MediaBuyable b: this.search(pattern))
-			System.out.println(b);
+		for(Link<MediaBuyable> b: this.search(pattern))
+			System.out.println(b.data().toString());
 	}
 	
 	public double averagePrice(){
@@ -140,8 +141,8 @@ public class Library {
 		
 		lib.displayBooks();
 		System.out.println("\nGetBD...");
-		for(Book b: lib.getBD())
-			System.out.println(b.title());
+		for(Link<Comic> b: lib.getBD())
+			System.out.println(b.data().title());
 		
 		System.out.println("Average price:" + lib.averagePrice());
 		

@@ -1,11 +1,26 @@
 package fr.upem.data;
 
-import fr.upem.library.MediaBuyable;
 
 public abstract class AbstractMediaBuyable implements MediaBuyable{
+	static class Subpart{
+		// static intern class cannot access to extern member class, intern class can
+		
+		private String m_title;
+		
+		public Subpart(String title){
+			m_title = title;
+		}
+		
+		public String title(){
+			return m_title;
+		}
+	}
+	
 	final protected String m_title;
 	protected double m_price;
 	protected double m_tva;
+	protected LinkedList<Subpart> m_subparts;
+
 	
 	public AbstractMediaBuyable(String title, double price){
 		this(title, price, 19.6);
@@ -14,7 +29,15 @@ public abstract class AbstractMediaBuyable implements MediaBuyable{
 	public AbstractMediaBuyable(String title, double price, double tva){
 		m_title = title;
 		m_price = price;
-		this.m_tva = tva;
+		m_tva = tva;
+	}
+	
+	public void addSubpart(String title){
+		m_subparts.add(new Subpart(title));
+	}
+	
+	public LinkedList<Subpart> getSubParts(){
+		return m_subparts;
 	}
 	
 	@Override
