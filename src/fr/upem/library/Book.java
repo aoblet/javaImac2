@@ -9,7 +9,7 @@ public class Book extends AbstractMediaBuyable{
 	protected static int isbnCounter;
 	
 	public Book(String title, String author, String isbn, double price){
-		super(title, price, 5.5);
+		super(title, price, 5.5, Version.Numeric);
 		this.m_author = author;
 		this.m_isbn = isbn;
 		//construct: new Book(.., .., ..,..);
@@ -50,10 +50,11 @@ public class Book extends AbstractMediaBuyable{
 	
 	public String toString(){
 		StringBuilder res = new StringBuilder();
-		res.append("Title:\t").append(m_title);
+		res.append("Title:\t").append(this.title());
 		res.append("\nAuthor:\t").append(m_author);
 		res.append("\nISBN:\t").append(m_isbn);
 		res.append("\nPrice:\t").append(m_price);
+		res.append("\nPrice shop:\t").append(this.price());
 		res.append("\n");
 		return res.toString();
 	}
