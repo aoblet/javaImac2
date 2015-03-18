@@ -9,10 +9,18 @@ public class BookIntegral extends AbstractMediaBuyable{
 	protected String m_author;
 	protected LinkedList<Book> m_list;
 	
+	public BookIntegral(String author, String nameSerie, Version version){
+		super(nameSerie, 0, version);
+		m_author = author;
+		m_nameSerie = nameSerie;
+		m_list = new LinkedList<Book>();
+	}
+	
 	public BookIntegral(String author, String nameSerie){
 		super(nameSerie, 0);
 		m_author = author;
 		m_nameSerie = nameSerie;
+		m_list = new LinkedList<Book>();
 	}
 	
 	public void add(Book b){
@@ -20,13 +28,16 @@ public class BookIntegral extends AbstractMediaBuyable{
 		m_price = this.price();
 	}
 	
-	public void removeAt(int i){
+	public void removeAt(int i) throws IndexOutOfBoundsException{
 		m_list.remove(i);
 		m_price = this.price();
 	}
 
 	@Override
 	public double price() {
+		if( m_list.size() == 0)
+			return 0;
+		
 		double res = 0;
 		for(Book b: m_list)
 			res += b.price();

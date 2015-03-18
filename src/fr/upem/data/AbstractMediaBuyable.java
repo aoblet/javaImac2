@@ -32,6 +32,10 @@ public abstract class AbstractMediaBuyable implements MediaBuyable{
 		this(title, price, tva, Version.Physic);
 	}
 	
+	public AbstractMediaBuyable(String title, double price, Version version){
+		this(title, price, 19.6, version);
+	}
+	
 	public AbstractMediaBuyable(String title, double price, double tva, Version version){
 		m_title = title;
 		m_price = price;
@@ -78,38 +82,25 @@ public abstract class AbstractMediaBuyable implements MediaBuyable{
 			res.append(s.data().title()).append("\n");
 		return res.toString();
 	}
+	
+	@Override
 	public double getTaxIncludedPrice(){
 		return this.price() * (1+(m_tva/100)); 
 	}
+	
+	@Override
+	public int hashCode(){
+		return title().hashCode() + (int)(this.price()) + m_version.hashCode() * 30; 
+	}
+	
+	@Override
+	public boolean equals(Object o){
+		return o instanceof AbstractMediaBuyable && this.hashCode() == o.hashCode();
+	}
+	
+	@Override
+	public int compare(MediaBuyable mb){
+		//TODO
+		return 0;
+	}
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
