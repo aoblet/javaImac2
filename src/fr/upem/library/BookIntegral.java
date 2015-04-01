@@ -6,19 +6,16 @@ import fr.upem.data.AbstractMediaBuyable;
 
 public class BookIntegral extends AbstractMediaBuyable{
 	protected String m_nameSerie;
-	protected String m_author;
 	protected LinkedList<Book> m_list;
 	
 	public BookIntegral(String author, String nameSerie, Version version){
-		super(nameSerie, 0, version);
-		m_author = author;
+		super(author, nameSerie, 0, version);
 		m_nameSerie = nameSerie;
 		m_list = new LinkedList<Book>();
 	}
 	
 	public BookIntegral(String author, String nameSerie){
-		super(nameSerie, 0);
-		m_author = author;
+		super(author, nameSerie, 0);
 		m_nameSerie = nameSerie;
 		m_list = new LinkedList<Book>();
 	}

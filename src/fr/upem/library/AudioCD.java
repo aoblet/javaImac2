@@ -6,7 +6,7 @@ public class AudioCD extends AbstractMediaBuyable {
 	protected int m_nbSongs;
 
 	public AudioCD(String title, double price){
-		super(title, price, 20);
+		super("", title, price, 20);
 	}
 	
 	public static void main(String[] args) {

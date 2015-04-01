@@ -7,6 +7,6 @@ public class VideoDVD extends AbstractMediaBuyable{
 	protected int m_nbMinutes;
 
 	public VideoDVD(String title, double price){
-		super(title, price, 20);
+		super("", title, price, 20);
 	}
 }

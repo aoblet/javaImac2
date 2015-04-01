@@ -1,18 +1,46 @@
 package fr.upem.data;
 
-import java.util.HashMap;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.NoSuchElementException;
+import java.util.Set;
+import java.util.TreeMap;
 
 import fr.upem.library.Book;
 import fr.upem.library.BookIntegral;
 import fr.upem.library.Comic;
 import fr.upem.library.Version;
-
-public class ShoppingBasket<T extends MediaBuyable> {
-	HashMap<T, Integer> m_data;
+ 	
+public class ShoppingBasket<T extends AbstractMediaBuyable> {
+	public TreeMap<T, Integer> m_data;
+	public Set<String> m_authors;
 	
 	public ShoppingBasket(){
-		m_data = new HashMap<T, Integer>();
+		m_data = new TreeMap<T, Integer>(new Comparator<T>() {
+			@Override
+			public int compare(T o1, T o2) {
+				return o1.compareTo(o2);
+			}
+		});
+		m_authors = new HashSet<String>();
+		this.updateAuthors();
+	}
+	
+	public Set<String> getAuthors(){
+		return Collections.unmodifiableSet(m_authors);
+	}
+	
+	public TreeMap<T, Integer> getData(){
+		return m_data;
+	}
+	
+	public void updateAuthors(){
+		m_authors.clear();
+		for(Map.Entry<T, Integer> entry: m_data.entrySet()){
+			m_authors.add(entry.getKey().author());
+		}
 	}
 	
 	public int add(T element){
@@ -20,17 +48,28 @@ public class ShoppingBasket<T extends MediaBuyable> {
 		newSize = (newSize == null) ? 1 : ++newSize;
 		
 		m_data.put(element, newSize);
+		this.updateAuthors();
 		return newSize;
 	}
 	
-	public int remove(T element) throws IndexOutOfBoundsException{
+	public void add(T element, int nb){
+		m_data.put(element, nb);
+	}
+	
+	public int remove(T element) throws NoSuchElementException{
 		Integer compareTo = m_data.get(element);
 		
 		if(compareTo == null || compareTo == 0)
-			throw new IndexOutOfBoundsException();
-		if(compareTo == 1)
-			m_data.remove(element);
-		return --compareTo;
+			throw new NoSuchElementException();
+		
+		if(compareTo > 0){
+			m_data.put(element, compareTo--);
+			if(compareTo == 0){
+				m_data.remove(element);
+				
+			}
+		}
+		return compareTo;
 	}
 	
 	public void clear(){
@@ -56,9 +95,9 @@ public class ShoppingBasket<T extends MediaBuyable> {
 		
 		double res = 0;
 		for(Map.Entry<T, Integer> entry: m_data.entrySet()){
-			res += entry.getKey().getTaxIncludedPrice();
+			res += (entry.getKey().getTaxIncludedPrice() * entry.getValue());
 		}
-		return res /= size;
+		return res;
 	}
 	
 	@Override
@@ -83,7 +122,7 @@ public class ShoppingBasket<T extends MediaBuyable> {
 		Comic c1 = new Comic("Histoire du futur", "Robert Heinelen", 6, true);
 		BookIntegral bi1 = new BookIntegral("Philip K.Dick", "Go home martians", Version.Physic);
 		
-		ShoppingBasket<MediaBuyable> shop = new ShoppingBasket<MediaBuyable>();
+		ShoppingBasket<AbstractMediaBuyable> shop = new ShoppingBasket<AbstractMediaBuyable>();
 		shop.add(b2);
 		shop.add(b1);
 		shop.add(b3);
@@ -104,6 +143,7 @@ public class ShoppingBasket<T extends MediaBuyable> {
 		shop.add(bi1);
 		
 		System.out.println(shop.getSampleNumber());
+		System.out.println(shop.getGlobalPrice());
 		System.out.println(shop.size());
 		
 		

@@ -3,14 +3,12 @@ package fr.upem.library;
 import fr.upem.data.AbstractMediaBuyable;
 
 public class Book extends AbstractMediaBuyable{
-	final protected String m_author;
 	final protected String m_isbn;
 	
 	protected static int isbnCounter;
 	
 	public Book(String title, String author, String isbn, double price){
-		super(title, price, 5.5, Version.Numeric);
-		this.m_author = author;
+		super(author, title, price, 5.5, Version.Numeric);
 		this.m_isbn = isbn;
 		//construct: new Book(.., .., ..,..);
 	}

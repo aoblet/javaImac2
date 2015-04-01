@@ -1,19 +1,18 @@
 package fr.upem.library;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import fr.upem.data.Link;
-import fr.upem.data.MediaBuyable;
+import fr.upem.data.AbstractMediaBuyable;
 import fr.upem.data.LinkedList;
 import fr.upem.data.MediaBuyableFilter;
 
 public class Library {
-	ArrayList<MediaBuyable> m_books;
+	ArrayList<AbstractMediaBuyable> m_books;
 	String m_name;
 	
 	public Library(String name) throws IllegalArgumentException {
-		m_books = new ArrayList<MediaBuyable>();
+		m_books = new ArrayList<AbstractMediaBuyable>();
 		m_name  = name;
 	}
 	
@@ -21,7 +20,7 @@ public class Library {
 		return m_books.size();
 	}
 	
-	public boolean add(MediaBuyable b){
+	public boolean add(AbstractMediaBuyable b){
 		return m_books.add(b);
 	}
 	
@@ -30,7 +29,7 @@ public class Library {
 		return m_books.contains(b);
 	}
 	
-	public MediaBuyable remove(int i){
+	public AbstractMediaBuyable remove(int i){
 		try{
 			return m_books.remove(i);			
 		}
@@ -46,30 +45,30 @@ public class Library {
 		res.append("\nName: ").append(m_name+"\n");
 		res.append("\nCurrent size: ").append(this.size()+"\n");
 		
-		for(MediaBuyable m: m_books)
+		for(AbstractMediaBuyable m: m_books)
 			res.append(m.toString()).append("\n");
 		return res.toString();
 	}
 	
 	public void displayBooks(){
 		System.out.println("My library:" + m_name + ", compact display");
-		for(MediaBuyable m: m_books)
+		for(AbstractMediaBuyable m: m_books)
 			System.out.println(m.title());
 	}
 	
 	public LinkedList<Comic> getBD(){
 		LinkedList<Comic> res =  new LinkedList<Comic>();
 		
-		for(MediaBuyable m: m_books){
+		for(AbstractMediaBuyable m: m_books){
 			if(m instanceof Comic)
 				res.add((Comic)m);
 		}
 		return res;
 	}
 	
-	public LinkedList<MediaBuyable> search(String pattern){
-		LinkedList<MediaBuyable> res = new LinkedList<MediaBuyable>();
-		for(MediaBuyable m : m_books){
+	public LinkedList<AbstractMediaBuyable> search(String pattern){
+		LinkedList<AbstractMediaBuyable> res = new LinkedList<AbstractMediaBuyable>();
+		for(AbstractMediaBuyable m : m_books){
 			if(m.title().contains(pattern))
 				res.add(m);
 		}
@@ -78,21 +77,21 @@ public class Library {
 	
 	public void printResultatSearch(String pattern){
 		System.out.println("Search: "+pattern);
-		for(Link<MediaBuyable> b: this.search(pattern))
+		for(Link<AbstractMediaBuyable> b: this.search(pattern))
 			System.out.println(b.data().toString());
 	}
 	
 	public double averagePrice(){
 		double res=0;
-		for(MediaBuyable m: m_books)
+		for(AbstractMediaBuyable m: m_books)
 			res += m.price();
 		
 		return res / this.size();
 	}
 	
-	public LinkedList<MediaBuyable> getElements (MediaBuyableFilter filter){
-		LinkedList<MediaBuyable> res = new LinkedList<MediaBuyable>();
-		for(MediaBuyable m : m_books){
+	public LinkedList<AbstractMediaBuyable> getElements (MediaBuyableFilter filter){
+		LinkedList<AbstractMediaBuyable> res = new LinkedList<AbstractMediaBuyable>();
+		for(AbstractMediaBuyable m : m_books){
 			if(filter.accept(m))
 				res.add(m);
 		}
@@ -140,9 +139,9 @@ public class Library {
 //		System.out.println("Average price:" + lib.averagePrice());
 //		lib.printResultatSearch("Le");
 		
-		LinkedList<MediaBuyable> search = lib.getElements(new MediaBuyableFilter() {
+		LinkedList<AbstractMediaBuyable> search = lib.getElements(new MediaBuyableFilter() {
 			@Override
-			public boolean accept(MediaBuyable mb) {
+			public boolean accept(AbstractMediaBuyable mb) {
 				return mb.price()> 50;
 			}
 		});

@@ -51,6 +51,11 @@ public class LinkedList<T> implements Iterable<Link<T>>{
 		return tmp != null ? tmp.data() : null;
 	}
 	
+	public void clear(){
+		m_size = 0;
+		m_firstLink = null;
+	}
+	
 	@Override
 	public Iterator<Link<T>> iterator() {
 		Iterator<Link<T>> it = new Iterator<Link<T>>() {

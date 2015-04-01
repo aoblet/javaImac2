@@ -2,7 +2,7 @@ package fr.upem.data;
 
 import fr.upem.library.Version;
 
-public abstract class AbstractMediaBuyable implements MediaBuyable{
+public abstract class AbstractMediaBuyable implements MediaBuyable, Comparable<AbstractMediaBuyable>{
 	static class Subpart{
 		// static intern class cannot access to extern member class, intern class can
 		
@@ -18,25 +18,27 @@ public abstract class AbstractMediaBuyable implements MediaBuyable{
 	}
 	
 	final protected String m_title;
+	final protected String m_author;
 	protected double m_price;
 	protected double m_tva;
 	protected Version m_version;
 	protected LinkedList<Subpart> m_subparts;
 
 	
-	public AbstractMediaBuyable(String title, double price){
-		this(title, price, 19.6, Version.Physic);
+	public AbstractMediaBuyable(String author, String title, double price){
+		this(author, title, price, 19.6, Version.Physic);
 	}
 	
-	public AbstractMediaBuyable(String title, double price, double tva){
-		this(title, price, tva, Version.Physic);
+	public AbstractMediaBuyable(String author, String title, double price, double tva){
+		this(author, title, price, tva, Version.Physic);
 	}
 	
-	public AbstractMediaBuyable(String title, double price, Version version){
-		this(title, price, 19.6, version);
+	public AbstractMediaBuyable(String author, String title, double price, Version version){
+		this(author, title, price, 19.6, version);
 	}
 	
-	public AbstractMediaBuyable(String title, double price, double tva, Version version){
+	public AbstractMediaBuyable(String author, String title, double price, double tva, Version version){
+		m_author = author;
 		m_title = title;
 		m_price = price;
 		m_tva = tva;
@@ -61,10 +63,19 @@ public abstract class AbstractMediaBuyable implements MediaBuyable{
 	public double price(){
 		return m_version.modifyPrice(m_price);
 	}
+
+	@Override
+	public String author(){
+		return m_author;
+	}
 	
 	@Override
 	public void setPrice(double p){
 		m_price = p;
+	}
+	
+	public Version version(){
+		return m_version;		
 	}
 	
 	@Override
@@ -99,8 +110,13 @@ public abstract class AbstractMediaBuyable implements MediaBuyable{
 	}
 	
 	@Override
-	public int compare(MediaBuyable mb){
-		//TODO
-		return 0;
+	public int compareTo(AbstractMediaBuyable mb){
+		int tmpCompare = mb.title().compareToIgnoreCase(m_title);
+		if(tmpCompare == 0){
+			tmpCompare = mb.author().compareToIgnoreCase(m_author);
+			if(tmpCompare == 0)
+				return mb.version().getSuffix().compareToIgnoreCase(m_version.getSuffix());
+		}
+		return tmpCompare;
 	}
 }
