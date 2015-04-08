@@ -1,5 +1,10 @@
 package fr.upem.library;
 
+import java.io.Externalizable;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectOutput;
+import java.io.Serializable;
 import java.util.ArrayList;
 
 import fr.upem.data.Link;
@@ -7,7 +12,7 @@ import fr.upem.data.AbstractMediaBuyable;
 import fr.upem.data.LinkedList;
 import fr.upem.data.MediaBuyableFilter;
 
-public class Library {
+public class Library implements Externalizable {
 	ArrayList<AbstractMediaBuyable> m_books;
 	String m_name;
 	
@@ -147,5 +152,18 @@ public class Library {
 		});
 		
 		System.out.println(search);
+	}
+
+	@Override
+	public void readExternal(ObjectInput in) throws IOException,
+			ClassNotFoundException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void writeExternal(ObjectOutput out) throws IOException {
+		// TODO Auto-generated method stub
+		
 	}
 }

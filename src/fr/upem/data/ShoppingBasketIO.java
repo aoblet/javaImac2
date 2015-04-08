@@ -6,8 +6,10 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
+import java.io.Serializable;
 import java.io.Writer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
@@ -20,8 +22,12 @@ import fr.upem.library.Comic;
 import fr.upem.library.Library;
 import fr.upem.library.Version;
 
-public class ShoppingBasketIO {
+public class ShoppingBasketIO implements Serializable {
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 9007305348465969352L;
 	protected Library m_library;
 	
 	public ShoppingBasketIO(Library currentLibrary){
@@ -42,29 +48,29 @@ public class ShoppingBasketIO {
 		out.close();
 	}
 	
-	public ShoppingBasket<AbstractMediaBuyable> loadBasket(InputStream in){
+	public ShoppingBasket<AbstractMediaBuyable> loadBasket(InputStream in) throws IOException{
 		ShoppingBasket<AbstractMediaBuyable> res = new ShoppingBasket<AbstractMediaBuyable>();
 		BufferedReader reader = new BufferedReader(new InputStreamReader(in));
 		
-		LinkedList<String> infos = new LinkedList<String>();
+		java.util.LinkedList<String> infos = new java.util.LinkedList<String>();
 		String line;
 		try {
 			while( (line = reader.readLine()) != null){
 				infos.add(line);
-				if(line == "\n"){
+				if(line.isEmpty()){
 					LinkedList<AbstractMediaBuyable> search = m_library.search(infos.get(0));
 					for(Link<AbstractMediaBuyable> m: search){
 						if(m.data().author().equals(infos.get(1))){
 							res.add(m.data(), Integer.parseInt(infos.get(2)));
 						}
 					}
-					infos.clear();
 				}
 			}
-		} 
+		}
 		catch (IOException e) {
 			e.printStackTrace();
 		}
+		System.out.println(res.size());
 		return res;
 	}
 	
@@ -102,12 +108,22 @@ public class ShoppingBasketIO {
 		
 		Library lib = new Library("MyLib");
 		lib.add(b2);
+		lib.add(b1);
+		lib.add(b5);
+		lib.add(b6);
+		lib.add(b7);
+		lib.add(b8);
+		lib.add(b1);
+		lib.add(c1);
 		
-		ShoppingBasketIO shopSave = new ShoppingBasketIO(null);
+		ShoppingBasketIO shopSave = new ShoppingBasketIO(lib);
 		try {
 			shopSave.saveBasket(shop, new FileOutputStream("/home/alex/Bureau/test.txt"));
 			System.out.println(shopSave.loadBasket(new FileInputStream("/home/alex/Bureau/test.txt")).getSampleNumber());
-			System.out.println(".");
+			//serialization
+			FileOutputStream outSerial = new FileOutputStream("/home/alex/Bureau/serial.txt");
+			ObjectOutputStream oos = new ObjectOutputStream(outSerial);
+			oos.writeObject(shopSave);
 		} 
 		catch (IOException e) {
 			e.printStackTrace();
