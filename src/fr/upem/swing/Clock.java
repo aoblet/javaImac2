@@ -4,17 +4,17 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 
 import javax.swing.BoxLayout;
-import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -26,6 +26,7 @@ public class Clock extends JPanel{
 	private Color m_backgroundColor;
 	private boolean m_autoRefresh;
 	private Thread m_thAutoRefresh;
+	private JLabel m_dateFormatted;
 	
 	public Clock(int ray, long timestamp) throws IllegalArgumentException{
 		m_autoRefresh = true;
@@ -36,6 +37,7 @@ public class Clock extends JPanel{
 		
 		m_pointsColor = Color.black;
 		m_backgroundColor = Color.white;
+		m_dateFormatted = new JLabel();
 		this.setKeyListener();
 		this.activeAutoRefresh();
 		this.setFocusable(true);
@@ -97,6 +99,7 @@ public class Clock extends JPanel{
 		int diameter = m_ray * 2;
 		
 		GregorianCalendar cal = new GregorianCalendar();
+		cal.setTime(new Date(m_timestamp));
 		int hour = cal.get(Calendar.HOUR); 
 		int min = cal.get(Calendar.MINUTE); 
 		int sec = cal.get(Calendar.SECOND); 
@@ -117,7 +120,27 @@ public class Clock extends JPanel{
 		
 		tmpCoord = this.getCoordLineFromTime("sec", sec, centerClock); 
 		g.drawLine(centerClock[0], centerClock[1], tmpCoord[0], tmpCoord[1]);
+		
+		this.paintDot(g, centerClock);
 		this.paintHours(g, centerClock);
+	}
+	
+	public void paintDot(Graphics g, int [] centerClock){
+		int xS,yS, xE, yE;
+		
+		for(int i = 1; i<61 ; ++i){
+			xS = (int)(Math.round(m_ray*Math.cos(i/60.0*2*Math.PI + (Math.PI/2))))*-1 + centerClock[0];
+			yS = (int)(Math.round(m_ray*Math.sin(i/60.0*2*Math.PI + (Math.PI/2))))*-1 + centerClock[1];
+			
+			xE = (xS - centerClock[0]) / 10;
+			yE = (yS - centerClock[1]) / 10*-1 ;
+			
+			
+			if((i%5) == 0)
+				g.drawLine(xS, yS, xS-xE , yS+yE);
+			else
+				g.drawOval(xS-3, yS-3, 6, 6);
+		}
 	}
 	
 	private void setKeyListener(){
@@ -154,23 +177,38 @@ public class Clock extends JPanel{
 			
 			@Override
 			public void run() {
+				final GregorianCalendar tmpCal = new GregorianCalendar();
 				while(true){
 					if(m_autoRefresh == false)
 						break;
 					
+					tmpCal.clear();
 					SwingUtilities.invokeLater(new Runnable() {
 						@Override
 						public void run() {
+							String formatted="";
+
 							Clock.this.setTimestamp(System.currentTimeMillis());
 							Clock.this.repaint();
 							Clock.this.revalidate();
+							
+							tmpCal.setTime(new Date((System.currentTimeMillis())));
+							formatted = "";
+							formatted += tmpCal.get(Calendar.HOUR_OF_DAY) < 10 ? "0" :"";
+							formatted += tmpCal.get(Calendar.HOUR_OF_DAY) +":";
+							
+							formatted += tmpCal.get(Calendar.MINUTE) < 10 ? "0" :"";
+							formatted += tmpCal.get(Calendar.MINUTE)+":";
+							
+							formatted += tmpCal.get(Calendar.SECOND) < 10 ? "0" :"";
+							formatted += tmpCal.get(Calendar.SECOND);
+							
+							Clock.this.m_dateFormatted.setText(formatted);
 						}
 					});
 					
 					try{
-						System.out.println("sleep");
 						Thread.sleep(1000);
-						
 					} 
 					catch(InterruptedException e) {
 						e.printStackTrace();
@@ -179,6 +217,10 @@ public class Clock extends JPanel{
 			}
 		});
 		m_thAutoRefresh.start();
+	}
+	
+	public JLabel getDateFormatted(){
+		return m_dateFormatted;
 	}
 	
 	public static void main(String[] args) {
@@ -197,27 +239,29 @@ public class Clock extends JPanel{
 			}
 		});
 	    
+	    frame.addWindowListener(new WindowAdapter() {
+	    	 public void windowClosing(WindowEvent e){
+                 clock.setAutoRefresh(false);
+             }
+		});
+	    
 		final JPanel main = new JPanel();
 		main.setLayout(new BoxLayout(main, BoxLayout.Y_AXIS));
 		main.add(clock);
 		
-		JButton button = new JButton("Mise à jour");
-		button.addActionListener(new ActionListener() {
-			@Override
-			public void actionPerformed(ActionEvent e) {
-				clock.setTimestamp(System.currentTimeMillis());
-				clock.repaint();
-				main.revalidate();
-			}
-		});
 		
 		JPanel panelButton = new JPanel();
 		panelButton.setLayout(new BoxLayout(panelButton, BoxLayout.X_AXIS));
-		panelButton.add(button);
+		
+		JPanel panelDate = new JPanel();
+		panelDate.setLayout(new BoxLayout(panelDate, BoxLayout.X_AXIS));
+		panelDate.add(clock.getDateFormatted());
+		
+		main.add(panelDate);
 		main.add(panelButton);
 		
 		frame.getContentPane().add(main);
-		
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setSize(520, 600);
 		frame.setVisible(true);
 	}
